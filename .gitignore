@@ -1,0 +1,10 @@
+.venv
+.vscode
+build
+dist
+__pycache__
+main.spec
+logs
+todo.txt
+saved_data
+icons
