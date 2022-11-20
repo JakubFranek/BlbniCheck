@@ -18,14 +18,21 @@ class MainView(QMainWindow, Ui_MainWindow):
         self,
         text: str,
         exc_details: str,
+        critical: bool = False,
         title: str = "Error!",
     ) -> None:
         message_box = QMessageBox()
-        message_box.setIcon(QMessageBox.Icon.Critical)
+
+        if critical is True:
+            message_box.setIcon(QMessageBox.Icon.Critical)
+            message_box.setWindowIcon(QIcon("icons_24:cross.png"))
+        else:
+            message_box.setIcon(QMessageBox.Icon.Warning)
+            message_box.setWindowIcon(QIcon("icons_24:exclamation.png"))
+
         message_box.setWindowTitle(title)
         message_box.setText(text)
         message_box.setDetailedText(exc_details)
-        message_box.setWindowIcon(QIcon("icons_24:cross.png"))
 
         message_box.exec()
 

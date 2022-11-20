@@ -47,8 +47,6 @@ class Ui_TaskDialog(object):
         self.verticalLayout.addWidget(self.buttonBox)
 
         self.retranslateUi(TaskDialog)
-        self.buttonBox.accepted.connect(TaskDialog.accept) # type: ignore
-        self.buttonBox.rejected.connect(TaskDialog.reject) # type: ignore
         QtCore.QMetaObject.connectSlotsByName(TaskDialog)
         TaskDialog.setTabOrder(self.lineEditDescription, self.plainTextEditNotes)
         TaskDialog.setTabOrder(self.plainTextEditNotes, self.dateTimeEditDueDate)

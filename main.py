@@ -11,17 +11,16 @@ from src.presenters.main_presenter import MainPresenter
 from src.views.main_view import MainView
 
 
-def handle_exception(exc_type, exc_value, exc_traceback):
+def handle_uncaught_exception(exc_type, exc_value, exc_traceback):
+    # Ignore KeyboardInterrupt (special case)
     if issubclass(exc_type, KeyboardInterrupt):
-        if app:
-            app.quit()
+        sys.__excepthook__(exc_type, exc_value, exc_traceback)
         return
 
     stack_summary = traceback.extract_tb(exc_traceback)
-    filename, line, dummy, dummy = stack_summary.pop()
-    exc_details = "".join(
-        traceback.format_exception(exc_type, exc_value, exc_traceback)
-    )
+    filename, line, _, _ = stack_summary.pop()
+    exc_details_list = traceback.format_exception(exc_type, exc_value, exc_traceback)
+    exc_details = "".join(exc_details_list)
     filename = os.path.basename(filename)
     error = "%s: %s" % (exc_type.__name__, exc_value)
 
@@ -29,12 +28,16 @@ def handle_exception(exc_type, exc_value, exc_traceback):
         <b>{error}</b><br/><br/>
         It occurred at <b>line {line}</b> of file <b>{filename}</b>.<br/></html>"""
 
-    main_view.display_error(text=text, exc_details=exc_details)
+    logging.critical(
+        "Uncaught exception", exc_info=(exc_type, exc_value, exc_traceback)
+    )
+
+    main_view.display_error(text=text, exc_details=exc_details, critical=True)
 
 
 if __name__ == "__main__":
 
-    sys.excepthook = handle_exception
+    sys.excepthook = handle_uncaught_exception
 
     start_dt = datetime.now()
 

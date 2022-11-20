@@ -1,6 +1,6 @@
 from PyQt6.QtCore import QDateTime, pyqtSignal
 from PyQt6.QtGui import QIcon
-from PyQt6.QtWidgets import QAbstractButton, QDialog, QDialogButtonBox
+from PyQt6.QtWidgets import QAbstractButton, QDialog, QDialogButtonBox, QMessageBox
 
 from resources.ui.Ui_task_dialog import Ui_TaskDialog
 
@@ -40,3 +40,25 @@ class TaskDialog(QDialog, Ui_TaskDialog):
             self.signal_cancel.emit()
         else:
             raise ValueError("Unknown role of the clicked button in the ButtonBox")
+
+    def display_error(
+        self,
+        text: str,
+        exc_details: str,
+        critical: bool = False,
+        title: str = "Error!",
+    ) -> None:
+        message_box = QMessageBox()
+
+        if critical is True:
+            message_box.setIcon(QMessageBox.Icon.Critical)
+            message_box.setWindowIcon(QIcon("icons_24:cross.png"))
+        else:
+            message_box.setIcon(QMessageBox.Icon.Warning)
+            message_box.setWindowIcon(QIcon("icons_24:exclamation.png"))
+
+        message_box.setWindowTitle(title)
+        message_box.setText(text)
+        message_box.setDetailedText(exc_details)
+
+        message_box.exec()
