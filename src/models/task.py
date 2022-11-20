@@ -1,5 +1,4 @@
 from datetime import datetime
-from typing import Optional
 
 from src.utilities.validation.validation import validate_string
 
@@ -14,8 +13,8 @@ class Task:
     def __init__(
         self,
         description_arg: str,
-        notes_arg: Optional[str] = None,
-        date_due_arg: Optional[datetime] = None,
+        notes_arg: str | None = None,
+        date_due_arg: datetime | None = None,
     ) -> None:
 
         self.description = description_arg
@@ -39,11 +38,11 @@ class Task:
         )
 
     @property
-    def notes(self) -> Optional[str]:
+    def notes(self) -> str | None:
         return self._notes
 
     @notes.setter
-    def notes(self, value: Optional[str]) -> None:
+    def notes(self, value: str | None) -> None:
         if value is None:
             self._notes = None
         else:
@@ -52,21 +51,21 @@ class Task:
             )
 
     @property
-    def date_due(self) -> Optional[datetime]:
+    def date_due(self) -> datetime | None:
         return self._date_due
 
     @date_due.setter
-    def date_due(self, value: Optional[datetime]) -> None:
+    def date_due(self, value: datetime | None) -> None:
         if value is not None and not isinstance(value, datetime):
             raise TypeError("Task due date must be a datetime or a None.")
-        self._date_due: Optional[datetime] = value
+        self._date_due: datetime | None = value
 
     @property
     def date_created(self) -> datetime:
         return self._date_created
 
     @property
-    def date_done(self) -> Optional[datetime]:
+    def date_done(self) -> datetime | None:
         return self._date_done
 
     @property

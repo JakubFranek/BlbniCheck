@@ -1,4 +1,4 @@
-# Form implementation generated from reading ui file 'main_window.ui'
+# Form implementation generated from reading ui file 'd:\Coding\BlbniCheck\resources\ui\main_window.ui'
 #
 # Created by: PyQt6 UI code generator 6.4.0
 #
@@ -25,7 +25,10 @@ class Ui_MainWindow(object):
         self.tableView.setSelectionBehavior(QtWidgets.QAbstractItemView.SelectionBehavior.SelectRows)
         self.tableView.setSortingEnabled(True)
         self.tableView.setObjectName("tableView")
-        self.tableView.horizontalHeader().setVisible(False)
+        self.tableView.horizontalHeader().setVisible(True)
+        self.tableView.horizontalHeader().setHighlightSections(False)
+        self.tableView.horizontalHeader().setStretchLastSection(True)
+        self.tableView.verticalHeader().setVisible(False)
         self.tableView.verticalHeader().setSortIndicatorShown(True)
         self.verticalLayout.addWidget(self.tableView)
         MainWindow.setCentralWidget(self.centralwidget)
