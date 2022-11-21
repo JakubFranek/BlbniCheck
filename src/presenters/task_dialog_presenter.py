@@ -14,12 +14,15 @@ class TaskDialogPresenter:
 
     def create_dialog(self) -> None:
         self.dialog = TaskDialog()
+
         self.dialog.signal_ok.connect(self.create_task)
-        self.dialog.signal_apply.connect(self.create_task)
+        self.dialog.signal_apply.connect(lambda: self.create_task(False))
+        self.dialog.signal_cancel.connect(self.dialog.reject)
+
         logging.info("Running TaskDialog")
         self.dialog.exec()
 
-    def create_task(self) -> None:
+    def create_task(self, close_dialog: bool = True) -> None:
         description = self.dialog.description
         notes = self.dialog.notes
         date_due = datetime.strptime(self.dialog.date_due, "%d.%m.%Y %H:%M")
@@ -29,7 +32,11 @@ class TaskDialogPresenter:
             self.model.add_task(description, notes, date_due)
             self.table_model.post_add()
             logging.info(f'Task "{description}" added')
-            self.dialog.accept()
-        except Exception as exc:
-            display_text, display_details = handle_exception(exc)  # type: ignore
-            self.dialog.display_error(display_text, display_details)
+            if close_dialog is True:
+                self.dialog.accept()
+        except Exception as exception:
+            self.handle_exception(exception)
+
+    def handle_exception(self, exception: Exception) -> None:
+        display_text, display_details = handle_exception(exception)  # type: ignore
+        self.dialog.display_error(display_text, display_details)

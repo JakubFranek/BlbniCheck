@@ -74,3 +74,12 @@ class TaskTableModel(QAbstractTableModel):
         self.view.setSortingEnabled(True)
         if self.proxy is not None:
             self.proxy.setDynamicSortFilter(True)
+
+    def pre_new_list(self) -> None:
+        self.view.setSortingEnabled(False)
+        self.beginResetModel()
+
+    def post_new_list(self) -> None:
+        self.endResetModel()
+        self.view.sortByColumn(0, Qt.SortOrder.AscendingOrder)
+        self.view.setSortingEnabled(True)

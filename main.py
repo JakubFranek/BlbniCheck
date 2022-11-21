@@ -3,6 +3,7 @@ import os
 import sys
 import traceback
 from datetime import datetime
+from types import TracebackType
 
 from PyQt6.QtWidgets import QApplication
 
@@ -11,7 +12,11 @@ from src.presenters.main_presenter import MainPresenter
 from src.views.main_view import MainView
 
 
-def handle_uncaught_exception(exc_type, exc_value, exc_traceback):
+def handle_uncaught_exception(
+    exc_type: type[BaseException],
+    exc_value: BaseException,
+    exc_traceback: TracebackType,
+) -> None:
     # Ignore KeyboardInterrupt (special case)
     if issubclass(exc_type, KeyboardInterrupt):
         sys.__excepthook__(exc_type, exc_value, exc_traceback)
@@ -33,6 +38,8 @@ def handle_uncaught_exception(exc_type, exc_value, exc_traceback):
     )
 
     main_view.display_error(text=text, exc_details=exc_details, critical=True)
+
+    app.exit()
 
 
 if __name__ == "__main__":

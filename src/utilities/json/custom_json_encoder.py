@@ -1,25 +1,28 @@
 import json
 from datetime import datetime
 from decimal import Decimal
+from typing import Any
 
-from src.models.model import Product
+from src.models.task import Task
 
 
 class CustomJSONEncoder(json.JSONEncoder):
-    def __init__(self, *args, **kwargs):
+    def __init__(self, *args: Any, **kwargs: Any) -> None:  # noqa: U100
         super().__init__(indent=2, separators=(", ", ": "))
 
-    def default(self, arg):
+    def default(self, arg: Any) -> Any:
         if isinstance(arg, datetime):
             return arg.isoformat()
-        elif isinstance(arg, Product):
-            return dict(
-                datatype="Product",
-                name=arg.name,
-                cost=arg.cost,
-                date_created=arg.date_created.isoformat(),
-            )
+        elif isinstance(arg, Task):
+            date_due = arg.date_due.isoformat() if arg.date_due is not None else "None"
+            return {
+                "datatype": "Task",
+                "description": arg.description,
+                "notes": arg.notes,
+                "date_due": date_due,
+                "date_created": arg.date_created.isoformat(),
+            }
         elif isinstance(arg, Decimal):
-            return dict(datatype="Decimal", number=str(arg))
+            return {"datatype": "Decimal", "number": str(arg)}
         else:
             super().default(arg)
