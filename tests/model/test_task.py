@@ -4,6 +4,10 @@ import pytest
 
 from src.models.task import Task
 
+# TODO: write more Task, Model tests incl. param
+# TODO: install pytest-qt and make some Qt tests (incl. QAbstractTableModel)
+# TODO: check coverage
+
 
 def test_init_pass():
     task_desc = "A Test Task"

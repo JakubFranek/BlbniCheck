@@ -29,9 +29,10 @@ def handle_uncaught_exception(
     filename = os.path.basename(filename)
     error = "%s: %s" % (exc_type.__name__, exc_value)
 
-    text = f"""<html>The following error has occured:<br/>
+    text = f"""<html>The following unexpected error has occured:<br/>
         <b>{error}</b><br/><br/>
-        It occurred at <b>line {line}</b> of file <b>{filename}</b>.<br/></html>"""
+        It occurred at <b>line {line}</b> of file <b>{filename}</b>.<br/><br/>
+        The program will Quit (without saving) after closing this window.</html>"""
 
     logging.critical(
         "Uncaught exception", exc_info=(exc_type, exc_value, exc_traceback)

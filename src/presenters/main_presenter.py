@@ -8,6 +8,7 @@ from src.utilities.json.custom_json_decoder import CustomJSONDecoder
 from src.utilities.json.custom_json_encoder import CustomJSONEncoder
 from src.views.main_view import MainView
 from src.views.view_models.task_table_model import TaskTableModel
+from src.views.view_models.task_table_proxy import TaskTableProxy
 
 
 class MainPresenter:
@@ -30,8 +31,10 @@ class MainPresenter:
             lambda: self.update_unsaved_changes(False)
         )
 
+        self.task_table_proxy = TaskTableProxy()
         self.task_table_model = TaskTableModel(self.model, self.main_view.tableView)
-        self.main_view.tableView.setModel(self.task_table_model)
+        self.task_table_proxy.setSourceModel(self.task_table_model)
+        self.main_view.tableView.setModel(self.task_table_proxy)
 
         self.task_dialog_presenter = TaskDialogPresenter(
             self.model, self.task_table_model
