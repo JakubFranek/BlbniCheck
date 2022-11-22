@@ -30,8 +30,9 @@ class TaskDialogPresenter:
         date_due = datetime.strptime(self.dialog.date_due, "%d.%m.%Y %H:%M")
 
         try:
+            index = len(self.model.task_list)
             self.table_model.pre_add()
-            index = self.model.add_task(description, notes, date_due)
+            self.model.add_task(description, notes, date_due)
             self.table_model.post_add()
             logging.info(f'Task "{description}" added at index {index}')
             if close_dialog is True:
