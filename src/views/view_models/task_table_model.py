@@ -5,6 +5,9 @@ from PyQt6.QtWidgets import QTableView
 
 from src.models.model import Model
 
+# TODO: add a proxy model for sorting
+# TODO: add some way to show notes
+
 
 class TaskTableModel(QAbstractTableModel):
 
@@ -83,3 +86,16 @@ class TaskTableModel(QAbstractTableModel):
         self.endResetModel()
         self.view.sortByColumn(0, Qt.SortOrder.AscendingOrder)
         self.view.setSortingEnabled(True)
+
+    def pre_delete_task(self, row: int) -> None:
+        self.beginRemoveRows(QModelIndex(), row, row)
+
+    def post_delete_task(self) -> None:
+        self.endRemoveRows()
+
+    def get_source_rows(self) -> set[int]:
+        indexes: list[QModelIndex] = self.view.selectedIndexes()
+        if self.proxy is not None:
+            return {self.proxy.mapToSource(index).row() for index in indexes}
+        else:
+            return {index.row() for index in indexes}

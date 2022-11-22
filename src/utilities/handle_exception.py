@@ -4,7 +4,7 @@ import sys
 import traceback
 
 
-def handle_exception(exception: BaseException) -> tuple[str, str] | None:
+def handle_exception() -> tuple[str, str] | None:
     exc_type, exc_value, exc_traceback = sys.exc_info()
 
     if exc_type and exc_value and exc_traceback is not None:

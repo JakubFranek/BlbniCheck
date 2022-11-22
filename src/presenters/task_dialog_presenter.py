@@ -17,26 +17,37 @@ class TaskDialogPresenter:
 
         self.dialog.signal_ok.connect(self.create_task)
         self.dialog.signal_apply.connect(lambda: self.create_task(False))
-        self.dialog.signal_cancel.connect(self.dialog.reject)
+        self.dialog.signal_cancel.connect(lambda: self.close_dialog(False))
 
-        logging.info("Running TaskDialog")
+        logging.info("Running TaskDialog...")
         self.dialog.exec()
 
     def create_task(self, close_dialog: bool = True) -> None:
+        logging.info("Adding a new Task...")
         description = self.dialog.description
         notes = self.dialog.notes
+        # TODO: allow no date_due set by the user (its optional!) in TaskDialog
         date_due = datetime.strptime(self.dialog.date_due, "%d.%m.%Y %H:%M")
 
         try:
             self.table_model.pre_add()
-            self.model.add_task(description, notes, date_due)
+            index = self.model.add_task(description, notes, date_due)
             self.table_model.post_add()
-            logging.info(f'Task "{description}" added')
+            logging.info(f'Task "{description}" added at index {index}')
             if close_dialog is True:
-                self.dialog.accept()
-        except Exception as exception:
-            self.handle_exception(exception)
+                self.close_dialog(True)
+        except Exception:
+            self.handle_exception()
 
-    def handle_exception(self, exception: Exception) -> None:
-        display_text, display_details = handle_exception(exception)  # type: ignore
+    def close_dialog(self, accepted: bool) -> None:
+
+        if accepted is True:
+            logging.info("Closing TaskDialog (result 'Accepted')")
+            self.dialog.accept()
+        else:
+            logging.info("Closing TaskDialog (result 'Rejected')")
+            self.dialog.reject()
+
+    def handle_exception(self) -> None:
+        display_text, display_details = handle_exception()  # type: ignore
         self.dialog.display_error(display_text, display_details)

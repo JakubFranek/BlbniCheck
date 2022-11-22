@@ -1,11 +1,8 @@
-from typing import Optional
-
-
 def validate_string(
     var: str,
     var_name: str,
-    min_length: Optional[int] = None,
-    max_length: Optional[int] = None,
+    min_length: int | None = None,
+    max_length: int | None = None,
 ) -> str:
     if not isinstance(var_name, str):
         raise TypeError(

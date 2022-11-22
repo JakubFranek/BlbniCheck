@@ -1,6 +1,6 @@
 from datetime import datetime
 
-from src.utilities.validation.validation import validate_string
+from src.utilities.validation import validate_string
 
 
 class Task:
