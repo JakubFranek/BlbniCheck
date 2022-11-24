@@ -1,6 +1,7 @@
 from typing import Any
 
 from PyQt6.QtCore import QAbstractTableModel, QModelIndex, QSortFilterProxyModel, Qt
+from PyQt6.QtGui import QIcon
 from PyQt6.QtWidgets import QTableView
 
 from src.models.model import Model
@@ -8,7 +9,7 @@ from src.models.model import Model
 
 class TaskTableModel(QAbstractTableModel):
 
-    headers = ("Description", "Date Due")
+    headers = ("Status", "Description", "Date Due")
 
     def __init__(
         self,
@@ -28,8 +29,10 @@ class TaskTableModel(QAbstractTableModel):
             task = self.model.task_list[index.row()]
 
             if column == 0:
-                return task.description
+                return None
             elif column == 1:
+                return task.description
+            elif column == 2:
                 if task.date_due is not None:
                     return task.date_due.strftime("%d/%m/%Y %H:%M")
                 else:
@@ -38,10 +41,19 @@ class TaskTableModel(QAbstractTableModel):
                 raise ValueError(
                     f"Column index must be less than or equal to 2 (is {column})."
                 )
+        elif role == Qt.ItemDataRole.DecorationRole:
+            task = self.model.task_list[index.row()]
+            if column == 0:
+                if task.done is True:
+                    return QIcon("icons_16:tick-button.png")
+                else:
+                    return QIcon("icons_16:cross-button.png")
         elif role == Qt.ItemDataRole.TextAlignmentRole:
             if column == 0:
-                return Qt.AlignmentFlag.AlignLeft | Qt.AlignmentFlag.AlignVCenter
+                return Qt.AlignmentFlag.AlignCenter | Qt.AlignmentFlag.AlignVCenter
             elif column == 1:
+                return Qt.AlignmentFlag.AlignLeft | Qt.AlignmentFlag.AlignVCenter
+            elif column == 2:
                 return Qt.AlignmentFlag.AlignRight | Qt.AlignmentFlag.AlignVCenter
             else:
                 raise ValueError(
@@ -52,7 +64,7 @@ class TaskTableModel(QAbstractTableModel):
         return len(self.model.task_list)
 
     def columnCount(self, index: QModelIndex = ...) -> int:  # noqa:U100
-        return 2
+        return 3
 
     def headerData(
         self, section: int, orientation: Qt.Orientation, role: int = ...

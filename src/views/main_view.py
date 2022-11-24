@@ -5,8 +5,10 @@ from PyQt6.QtGui import QCloseEvent, QContextMenuEvent, QCursor, QIcon
 from PyQt6.QtWidgets import QFileDialog, QHeaderView, QMainWindow, QMenu, QMessageBox
 
 from resources.ui.Ui_main_window import Ui_MainWindow
+from src.views.utilities.icon_delegate import IconDelegate
 
 
+# TODO: double click on row -> Edit action
 class MainView(QMainWindow, Ui_MainWindow):
     signal_create_task = pyqtSignal()
     signal_delete_task = pyqtSignal()
@@ -106,15 +108,21 @@ class MainView(QMainWindow, Ui_MainWindow):
         self.actionDelete_Task.triggered.connect(lambda: self.signal_delete_task.emit())
         self.actionEdit_Task.triggered.connect(lambda: self.signal_edit_task.emit())
 
+        icon_delegate = IconDelegate(self.tableView)
+        self.tableView.setItemDelegate(icon_delegate)
+
     def finalize_setup(self) -> None:
         self.tableView.selectionModel().selectionChanged.connect(
             lambda: self.signal_table_selection_changed.emit()
         )
 
-        # for some reason the line below causes program to crash on startup without error if placed
-        # in initial_setup()
+        # for some reason the line below causes program to crash on startup without error
+        # if placed in initial_setup()
         self.tableView.horizontalHeader().setSectionResizeMode(
-            0, QHeaderView.ResizeMode.Stretch
+            0, QHeaderView.ResizeMode.ResizeToContents
+        )
+        self.tableView.horizontalHeader().setSectionResizeMode(
+            1, QHeaderView.ResizeMode.Stretch
         )
 
     def display_error(
