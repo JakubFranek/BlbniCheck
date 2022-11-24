@@ -27,7 +27,7 @@ class Ui_MainWindow(object):
         self.tableView.setObjectName("tableView")
         self.tableView.horizontalHeader().setVisible(True)
         self.tableView.horizontalHeader().setHighlightSections(False)
-        self.tableView.horizontalHeader().setStretchLastSection(True)
+        self.tableView.horizontalHeader().setStretchLastSection(False)
         self.tableView.verticalHeader().setVisible(False)
         self.tableView.verticalHeader().setSortIndicatorShown(True)
         self.verticalLayout.addWidget(self.tableView)

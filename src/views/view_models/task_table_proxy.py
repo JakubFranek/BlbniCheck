@@ -25,6 +25,8 @@ class TaskTableProxy(QSortFilterProxyModel):
             else:
                 logging.warning(f"Incorrect column index accessed ({column_left})")
                 return False
+        elif data_left or data_right:
+            return bool(data_left)
         else:
             logging.warning("Data of 'falsy' Value compared during sorting")
             return False

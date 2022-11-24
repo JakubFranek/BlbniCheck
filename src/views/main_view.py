@@ -2,7 +2,7 @@ import os
 
 from PyQt6.QtCore import QDir, pyqtSignal
 from PyQt6.QtGui import QCloseEvent, QContextMenuEvent, QCursor, QIcon
-from PyQt6.QtWidgets import QFileDialog, QMainWindow, QMenu, QMessageBox
+from PyQt6.QtWidgets import QFileDialog, QHeaderView, QMainWindow, QMenu, QMessageBox
 
 from resources.ui.Ui_main_window import Ui_MainWindow
 
@@ -20,28 +20,6 @@ class MainView(QMainWindow, Ui_MainWindow):
     def __init__(self) -> None:
         super().__init__()
         self.initial_setup()
-
-    def display_error(
-        self,
-        text: str,
-        exc_details: str,
-        critical: bool = False,
-        title: str = "Error!",
-    ) -> None:
-        message_box = QMessageBox()
-
-        if critical is True:
-            message_box.setIcon(QMessageBox.Icon.Critical)
-            message_box.setWindowIcon(QIcon("icons_24:cross.png"))
-        else:
-            message_box.setIcon(QMessageBox.Icon.Warning)
-            message_box.setWindowIcon(QIcon("icons_24:exclamation.png"))
-
-        message_box.setWindowTitle(title)
-        message_box.setText(text)
-        message_box.setDetailedText(exc_details)
-
-        message_box.exec()
 
     def get_save_path(self) -> tuple[str, str]:
         return QFileDialog.getSaveFileName(self, filter="JSON file (*.json)")
@@ -132,3 +110,31 @@ class MainView(QMainWindow, Ui_MainWindow):
         self.tableView.selectionModel().selectionChanged.connect(
             lambda: self.signal_table_selection_changed.emit()
         )
+
+        # for some reason the line below causes program to crash on startup without error if placed
+        # in initial_setup()
+        self.tableView.horizontalHeader().setSectionResizeMode(
+            0, QHeaderView.ResizeMode.Stretch
+        )
+
+    def display_error(
+        self,
+        text: str,
+        exc_details: str,
+        critical: bool = False,
+        title: str = "Error!",
+    ) -> None:
+        message_box = QMessageBox()
+
+        if critical is True:
+            message_box.setIcon(QMessageBox.Icon.Critical)
+            message_box.setWindowIcon(QIcon("icons_24:cross.png"))
+        else:
+            message_box.setIcon(QMessageBox.Icon.Warning)
+            message_box.setWindowIcon(QIcon("icons_24:exclamation.png"))
+
+        message_box.setWindowTitle(title)
+        message_box.setText(text)
+        message_box.setDetailedText(exc_details)
+
+        message_box.exec()
