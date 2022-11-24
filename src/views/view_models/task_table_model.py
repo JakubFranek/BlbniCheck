@@ -5,8 +5,6 @@ from PyQt6.QtWidgets import QTableView
 
 from src.models.model import Model
 
-# TODO: add some way to show notes
-
 
 class TaskTableModel(QAbstractTableModel):
 

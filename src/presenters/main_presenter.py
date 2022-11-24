@@ -82,6 +82,9 @@ class MainPresenter:
                 with open(self.current_file_path, "w") as file:
                     json.dump(self.model.task_list, file, cls=CustomJSONEncoder)
                     self.update_unsaved_changes(False)
+                    self.main_view.statusBar().showMessage(
+                        f"File saved ({self.current_file_path})", 2000
+                    )
                     logging.info(f"File saved to {self.current_file_path}")
             else:
                 logging.info("Invalid or no file path received, file saving cancelled")
@@ -100,6 +103,9 @@ class MainPresenter:
                     self.task_table_model.pre_new_list()
                     self.model.load_task_list(list_tasks)
                     self.task_table_model.post_new_list()
+                    self.main_view.statusBar().showMessage(
+                        f"File loaded ({self.current_file_path})", 2000
+                    )
                     logging.info(
                         f"JSON file containing {length} Task(s) loaded from {file_path}"
                     )

@@ -1,8 +1,8 @@
 import os
 
 from PyQt6.QtCore import QDir, pyqtSignal
-from PyQt6.QtGui import QCloseEvent, QIcon
-from PyQt6.QtWidgets import QFileDialog, QMainWindow, QMessageBox
+from PyQt6.QtGui import QCloseEvent, QContextMenuEvent, QCursor, QIcon
+from PyQt6.QtWidgets import QFileDialog, QMainWindow, QMenu, QMessageBox
 
 from resources.ui.Ui_main_window import Ui_MainWindow
 
@@ -90,6 +90,12 @@ class MainView(QMainWindow, Ui_MainWindow):
     def update_task_actions(self, selected: bool) -> None:
         self.actionEdit_Task.setEnabled(selected)
         self.actionDelete_Task.setEnabled(selected)
+
+    def contextMenuEvent(self, event: QContextMenuEvent) -> None:  # noqa: U100
+        self.menu = QMenu(self)
+        self.menu.addAction(self.actionDelete_Task)
+        self.menu.addAction(self.actionEdit_Task)
+        self.menu.popup(QCursor.pos())
 
     def closeEvent(self, event: QCloseEvent) -> None:
         self.signal_exit.emit()
