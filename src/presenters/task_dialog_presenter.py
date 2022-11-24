@@ -18,6 +18,7 @@ class TaskDialogPresenter:
         self.dialog.signal_ok.connect(self.create_task)
         self.dialog.signal_apply.connect(lambda: self.create_task(False))
         self.dialog.signal_cancel.connect(lambda: self.close_dialog(False))
+        self.dialog.signal_date_due_toggle.connect(self.date_due_toggled)
 
         logging.info("Running TaskDialog...")
         self.dialog.exec()
@@ -26,8 +27,10 @@ class TaskDialogPresenter:
         logging.info("Adding a new Task...")
         description = self.dialog.description
         notes = self.dialog.notes
-        # TODO: allow no date_due set by the user (its optional!) in TaskDialog
-        date_due = datetime.strptime(self.dialog.date_due, "%d.%m.%Y %H:%M")
+        if self.dialog.date_due_enabled is True:
+            date_due = datetime.strptime(self.dialog.date_due, "%d.%m.%Y %H:%M")
+        else:
+            date_due = None
 
         try:
             index = len(self.model.task_list)
@@ -41,13 +44,18 @@ class TaskDialogPresenter:
             self.handle_exception()
 
     def close_dialog(self, accepted: bool) -> None:
-
         if accepted is True:
             logging.info("Closing TaskDialog (result 'Accepted')")
             self.dialog.accept()
         else:
             logging.info("Closing TaskDialog (result 'Rejected')")
             self.dialog.reject()
+
+    def date_due_toggled(self) -> None:
+        if self.dialog.date_due_enabled is True:
+            self.dialog.dateTimeEditDueDate.setEnabled(True)
+        else:
+            self.dialog.dateTimeEditDueDate.setEnabled(False)
 
     def handle_exception(self) -> None:
         display_text, display_details = handle_exception()  # type: ignore

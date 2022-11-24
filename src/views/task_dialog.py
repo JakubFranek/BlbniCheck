@@ -9,6 +9,7 @@ class TaskDialog(QDialog, Ui_TaskDialog):
     signal_ok = pyqtSignal()
     signal_apply = pyqtSignal()
     signal_cancel = pyqtSignal()
+    signal_date_due_toggle = pyqtSignal()
 
     def __init__(self) -> None:
         super().__init__()
@@ -17,6 +18,10 @@ class TaskDialog(QDialog, Ui_TaskDialog):
         self.setWindowIcon(QIcon("icons_24:plus.png"))
         self.dateTimeEditDueDate.setDateTime(QDateTime.currentDateTime())
         self.buttonBox.clicked.connect(self.handleButtonBoxClick)
+        self.checkBox.stateChanged.connect(lambda: self.signal_date_due_toggle.emit())
+
+        self.checkBox.setChecked(False)
+        self.dateTimeEditDueDate.setEnabled(False)
 
     @property
     def description(self) -> str:
@@ -25,6 +30,10 @@ class TaskDialog(QDialog, Ui_TaskDialog):
     @property
     def notes(self) -> str:
         return self.plainTextEditNotes.toPlainText()
+
+    @property
+    def date_due_enabled(self) -> bool:
+        return self.checkBox.isChecked()
 
     @property
     def date_due(self) -> str:
