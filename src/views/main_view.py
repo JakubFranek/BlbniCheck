@@ -108,6 +108,8 @@ class MainView(QMainWindow, Ui_MainWindow):
         self.actionDelete_Task.triggered.connect(lambda: self.signal_delete_task.emit())
         self.actionEdit_Task.triggered.connect(lambda: self.signal_edit_task.emit())
 
+        self.tableView.doubleClicked.connect(lambda: self.signal_edit_task.emit())
+
         icon_delegate = IconDelegate(self.tableView)
         self.tableView.setItemDelegate(icon_delegate)
 
