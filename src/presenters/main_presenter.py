@@ -136,7 +136,11 @@ class MainPresenter:
 
     def update_unsaved_changes(self, unsaved_changes: bool) -> None:
         self.unsaved_changes = unsaved_changes
-        self.main_view.set_save_status(self.current_file_path, self.unsaved_changes)
+        no_of_tasks = len(self.model.task_list)
+        enable_save_as = no_of_tasks > 0
+        self.main_view.set_save_status(
+            self.current_file_path, self.unsaved_changes, enable_save_as
+        )
 
     def table_selection_changed(self) -> None:
         indices = self.task_table_model.get_selected_source_rows()

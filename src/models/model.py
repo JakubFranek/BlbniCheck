@@ -45,6 +45,10 @@ class Model:
             task.date_due = date_due
         self.event_task_edited()
 
+    def set_task_status(self, index: int, status: bool) -> None:
+        # TODO: implement Task completion
+        pass
+
     def load_task_list(self, task_list: list[Task]) -> None:
         self._task_list = task_list
         self.event_task_list_loaded()

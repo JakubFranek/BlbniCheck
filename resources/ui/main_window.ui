@@ -99,10 +99,10 @@
     <string>Edit Task</string>
    </property>
    <property name="toolTip">
-    <string>Edit an existing Task</string>
+    <string>Edit selected Task(s)</string>
    </property>
    <property name="statusTip">
-    <string>Edit an existing Task</string>
+    <string>Edit selected Task(s)</string>
    </property>
    <property name="shortcut">
     <string>Ctrl+E</string>
@@ -113,10 +113,10 @@
     <string>Delete Task</string>
    </property>
    <property name="toolTip">
-    <string>Delete an existing Task</string>
+    <string>Delete selected Task(s)</string>
    </property>
    <property name="statusTip">
-    <string>Delete an existing Task</string>
+    <string>Delete selected Task(s)</string>
    </property>
    <property name="shortcut">
     <string>Ctrl+D</string>
@@ -155,10 +155,10 @@
     <string>Save As...</string>
    </property>
    <property name="toolTip">
-    <string>Save to a file of your own choosing</string>
+    <string>Save to a file of your choosing</string>
    </property>
    <property name="statusTip">
-    <string>Save to a file of your own choosing</string>
+    <string>Save to a file of your choosing</string>
    </property>
    <property name="shortcut">
     <string>Ctrl+Shift+S</string>

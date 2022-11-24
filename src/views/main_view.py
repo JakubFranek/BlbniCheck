@@ -6,8 +6,6 @@ from PyQt6.QtWidgets import QFileDialog, QMainWindow, QMenu, QMessageBox
 
 from resources.ui.Ui_main_window import Ui_MainWindow
 
-# TODO: add context menu for table
-
 
 class MainView(QMainWindow, Ui_MainWindow):
     signal_create_task = pyqtSignal()
@@ -71,7 +69,7 @@ class MainView(QMainWindow, Ui_MainWindow):
             return None
 
     def set_save_status(
-        self, current_file_path: str | None, unsaved_changes: bool
+        self, current_file_path: str | None, unsaved_changes: bool, enable_save_as: bool
     ) -> None:
         if unsaved_changes is True:
             self.actionSave.setIcon(QIcon("icons_16:disk--exclamation.png"))
@@ -86,6 +84,8 @@ class MainView(QMainWindow, Ui_MainWindow):
         else:
             self.actionSave.setEnabled(True)
             self.setWindowTitle("Blbnicheck - " + current_file_path + star_str)
+
+        self.actionSave_As.setEnabled(enable_save_as)
 
     def update_task_actions(self, selected: bool) -> None:
         self.actionEdit_Task.setEnabled(selected)
