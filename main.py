@@ -1,3 +1,4 @@
+import ctypes
 import logging
 import os
 import sys
@@ -44,6 +45,10 @@ def handle_uncaught_exception(
 
 
 if __name__ == "__main__":
+
+    # the following two lines are needed to make sure task bar icon works
+    myappid = "Jakub_Franek.Blbnicheck.v0.1"  # arbitrary string
+    ctypes.windll.shell32.SetCurrentProcessExplicitAppUserModelID(myappid)
 
     sys.excepthook = handle_uncaught_exception
 
