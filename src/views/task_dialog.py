@@ -14,6 +14,9 @@ class TaskDialog(QDialog, Ui_TaskDialog):
     signal_cancel = pyqtSignal()
     signal_date_due_toggle = pyqtSignal()
 
+    STRING_DIFFERENT_VALUES = "Keep current values"
+    TEXT_COLOR_GRAY = "#808080"
+
     def __init__(self, edit_mode: bool) -> None:
         super().__init__()
         self.setupUi(self)
@@ -28,6 +31,9 @@ class TaskDialog(QDialog, Ui_TaskDialog):
         self.dateTimeEditDueDate.setDateTime(QDateTime.currentDateTime())
         self.buttonBox.clicked.connect(self.handleButtonBoxClick)
         self.checkBox.stateChanged.connect(lambda: self.signal_date_due_toggle.emit())
+
+        self.lineEditDescription.textChanged.connect(self.description_edited)
+        self.plainTextEditNotes.textChanged.connect(self.notes_edited)
 
         self.checkBox.setChecked(False)
         self.dateTimeEditDueDate.setEnabled(False)
@@ -97,6 +103,20 @@ class TaskDialog(QDialog, Ui_TaskDialog):
     def closeEvent(self, event: QCloseEvent) -> None:
         event.ignore()
         self.signal_cancel.emit()
+
+    def description_edited(self) -> None:
+        current_text = self.lineEditDescription.text()
+        if current_text == self.STRING_DIFFERENT_VALUES:
+            self.lineEditDescription.setStyleSheet(f"color: {self.TEXT_COLOR_GRAY}")
+        else:
+            self.lineEditDescription.setStyleSheet("")
+
+    def notes_edited(self) -> None:
+        current_text = self.plainTextEditNotes.toPlainText()
+        if current_text == self.STRING_DIFFERENT_VALUES:
+            self.plainTextEditNotes.setStyleSheet(f"color: {self.TEXT_COLOR_GRAY}")
+        else:
+            self.plainTextEditNotes.setStyleSheet("")
 
     def display_error(
         self,

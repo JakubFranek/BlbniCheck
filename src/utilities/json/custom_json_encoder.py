@@ -19,6 +19,7 @@ class CustomJSONEncoder(json.JSONEncoder):
                 "datatype": "Task",
                 "description": arg.description,
                 "notes": arg.notes,
+                "done": arg.done,
                 "date_due": date_due,
                 "date_created": arg.date_created.isoformat(),
             }

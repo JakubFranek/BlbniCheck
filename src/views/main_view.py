@@ -8,7 +8,6 @@ from resources.ui.Ui_main_window import Ui_MainWindow
 from src.views.utilities.icon_delegate import IconDelegate
 
 
-# TODO: double click on row -> Edit action
 class MainView(QMainWindow, Ui_MainWindow):
     signal_create_task = pyqtSignal()
     signal_delete_task = pyqtSignal()
@@ -18,6 +17,8 @@ class MainView(QMainWindow, Ui_MainWindow):
     signal_exit = pyqtSignal()
     signal_edit_task = pyqtSignal()
     signal_table_selection_changed = pyqtSignal()
+    signal_set_tasks_done = pyqtSignal()
+    signal_set_tasks_undone = pyqtSignal()
 
     def __init__(self) -> None:
         super().__init__()
@@ -70,9 +71,14 @@ class MainView(QMainWindow, Ui_MainWindow):
     def update_task_actions(self, selected: bool) -> None:
         self.actionEdit_Task.setEnabled(selected)
         self.actionDelete_Task.setEnabled(selected)
+        self.actionSet_as_Done.setEnabled(selected)
+        self.actionSet_as_Undone.setEnabled(selected)
 
     def contextMenuEvent(self, event: QContextMenuEvent) -> None:  # noqa: U100
         self.menu = QMenu(self)
+        self.menu.addAction(self.actionSet_as_Done)
+        self.menu.addAction(self.actionSet_as_Undone)
+        self.menu.addSeparator()
         self.menu.addAction(self.actionDelete_Task)
         self.menu.addAction(self.actionEdit_Task)
         self.menu.popup(QCursor.pos())
@@ -100,6 +106,8 @@ class MainView(QMainWindow, Ui_MainWindow):
         self.actionCreate_Task.setIcon(QIcon("icons_16:plus.png"))
         self.actionEdit_Task.setIcon(QIcon("icons_16:pencil.png"))
         self.actionDelete_Task.setIcon(QIcon("icons_16:minus.png"))
+        self.actionSet_as_Done.setIcon(QIcon("icons_16:tick-button.png"))
+        self.actionSet_as_Undone.setIcon(QIcon("icons_16:cross-button.png"))
 
         self.actionCreate_Task.triggered.connect(lambda: self.signal_create_task.emit())
         self.actionSave.triggered.connect(lambda: self.signal_save.emit())
@@ -107,6 +115,12 @@ class MainView(QMainWindow, Ui_MainWindow):
         self.actionOpen.triggered.connect(lambda: self.signal_open.emit())
         self.actionDelete_Task.triggered.connect(lambda: self.signal_delete_task.emit())
         self.actionEdit_Task.triggered.connect(lambda: self.signal_edit_task.emit())
+        self.actionSet_as_Done.triggered.connect(
+            lambda: self.signal_set_tasks_done.emit()
+        )
+        self.actionSet_as_Undone.triggered.connect(
+            lambda: self.signal_set_tasks_undone.emit()
+        )
 
         self.tableView.doubleClicked.connect(lambda: self.signal_edit_task.emit())
 
@@ -118,8 +132,8 @@ class MainView(QMainWindow, Ui_MainWindow):
             lambda: self.signal_table_selection_changed.emit()
         )
 
-        # for some reason the line below causes program to crash on startup without error
-        # if placed in initial_setup()
+        """ For some reason the lines below cause the program to crash on startup
+        without error message if placed in initial_setup() """
         self.tableView.horizontalHeader().setSectionResizeMode(
             0, QHeaderView.ResizeMode.ResizeToContents
         )

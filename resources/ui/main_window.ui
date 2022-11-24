@@ -79,6 +79,9 @@
    <addaction name="actionCreate_Task"/>
    <addaction name="actionEdit_Task"/>
    <addaction name="actionDelete_Task"/>
+   <addaction name="separator"/>
+   <addaction name="actionSet_as_Done"/>
+   <addaction name="actionSet_as_Undone"/>
   </widget>
   <action name="actionCreate_Task">
    <property name="text">
@@ -162,6 +165,28 @@
    </property>
    <property name="shortcut">
     <string>Ctrl+Shift+S</string>
+   </property>
+  </action>
+  <action name="actionSet_as_Done">
+   <property name="text">
+    <string>Set as Done</string>
+   </property>
+   <property name="toolTip">
+    <string>Set selected Task(s) as Done</string>
+   </property>
+   <property name="statusTip">
+    <string>Set selected Task(s) as Done</string>
+   </property>
+  </action>
+  <action name="actionSet_as_Undone">
+   <property name="text">
+    <string>Set as Undone</string>
+   </property>
+   <property name="toolTip">
+    <string>Set selected Task(s) as Undone</string>
+   </property>
+   <property name="statusTip">
+    <string>Set selected Task(s) as Undone</string>
    </property>
   </action>
  </widget>

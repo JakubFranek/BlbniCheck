@@ -17,6 +17,7 @@ class CustomJSONDecoder(json.JSONDecoder):
             elif obj["datatype"] == "Task":
                 description = obj["description"]
                 notes = obj["notes"]
+                done = obj["done"]
                 temp_date_due = obj["date_due"]
                 date_created = obj["date_created"]
                 if temp_date_due == "None":
@@ -25,5 +26,6 @@ class CustomJSONDecoder(json.JSONDecoder):
                     date_due = datetime.fromisoformat(temp_date_due)
                 task = Task(description, notes, date_due)
                 task._date_created = datetime.fromisoformat(date_created)
+                task.done = done
                 return task
         return obj

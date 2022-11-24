@@ -29,7 +29,7 @@ class TaskTableModel(QAbstractTableModel):
             task = self.model.task_list[index.row()]
 
             if column == 0:
-                return None
+                return task.done
             elif column == 1:
                 return task.description
             elif column == 2:
@@ -93,7 +93,7 @@ class TaskTableModel(QAbstractTableModel):
 
     def post_new_list(self) -> None:
         self.endResetModel()
-        self.view.sortByColumn(0, Qt.SortOrder.AscendingOrder)
+        self.view.sortByColumn(2, Qt.SortOrder.AscendingOrder)
         self.view.setSortingEnabled(True)
 
     def pre_delete_task(self, row: int) -> None:

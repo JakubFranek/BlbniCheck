@@ -43,6 +43,7 @@ class Ui_TaskDialog(object):
         self.checkBox.setObjectName("checkBox")
         self.horizontalLayout.addWidget(self.checkBox)
         self.dateTimeEditDueDate = QtWidgets.QDateTimeEdit(TaskDialog)
+        self.dateTimeEditDueDate.setMinimumDate(QtCore.QDate(1999, 12, 31))
         self.dateTimeEditDueDate.setCalendarPopup(True)
         self.dateTimeEditDueDate.setObjectName("dateTimeEditDueDate")
         self.horizontalLayout.addWidget(self.dateTimeEditDueDate)

@@ -47,7 +47,8 @@ class Model:
 
     def set_task_status(self, index: int, status: bool) -> None:
         # TODO: implement Task completion
-        pass
+        self.task_list[index].done = status
+        self.event_task_edited()
 
     def load_task_list(self, task_list: list[Task]) -> None:
         self._task_list = task_list

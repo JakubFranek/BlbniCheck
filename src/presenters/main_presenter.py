@@ -20,11 +20,17 @@ class MainPresenter:
 
         self.main_view.signal_create_task.connect(lambda: self.create_dialog(False))
         self.main_view.signal_edit_task.connect(lambda: self.create_dialog(True))
-        self.main_view.signal_delete_task.connect(self.delete_task)
+        self.main_view.signal_delete_task.connect(self.delete_tasks)
         self.main_view.signal_open.connect(self.load_from_file)
         self.main_view.signal_save.connect(self.save_to_file)
         self.main_view.signal_save_as.connect(lambda: self.save_to_file(True))
         self.main_view.signal_exit.connect(self.close)
+        self.main_view.signal_set_tasks_done.connect(
+            lambda: self.set_tasks_status(True)
+        )
+        self.main_view.signal_set_tasks_undone.connect(
+            lambda: self.set_tasks_status(False)
+        )
         self.main_view.signal_table_selection_changed.connect(
             self.table_selection_changed
         )
@@ -57,16 +63,29 @@ class MainPresenter:
     def create_dialog(self, edit_mode: bool) -> None:
         self.task_dialog_presenter.create_dialog(edit_mode)
 
-    def delete_task(self) -> None:
+    def delete_tasks(self) -> None:
         try:
-            source_rows = self.task_table_model.get_selected_source_rows()
-            if len(source_rows) >= 1:
-                for row in sorted(source_rows, reverse=True):
-                    self.task_table_model.pre_delete_task(row)
-                    description = self.model.task_list[row].description
-                    self.model.delete_task(row)
+            indices = self.task_table_model.get_selected_source_rows()
+            if len(indices) >= 1:
+                for index in sorted(indices, reverse=True):
+                    self.task_table_model.pre_delete_task(index)
+                    description = self.model.task_list[index].description
+                    self.model.delete_task(index)
                     self.task_table_model.post_delete_task()
-                    logging.info(f"Removed Task '{description}' from index {row}")
+                    logging.info(f"Removed Task '{description}' from index {index}")
+        except Exception:
+            self.handle_exception()
+
+    def set_tasks_status(self, status: bool) -> None:
+        try:
+            indices = self.task_table_model.get_selected_source_rows()
+            if len(indices) >= 1:
+                for index in indices:
+                    description = self.model.task_list[index].description
+                    self.model.set_task_status(index, status)
+                    logging.info(
+                        f"Set Task '{description}' as \"{'Done' if status else 'Undone'}\""
+                    )
         except Exception:
             self.handle_exception()
 
