@@ -6,6 +6,8 @@ from PyQt6.QtWidgets import QTableView
 
 from src.models.model import Model
 
+# TODO: update tableview when status is changed
+
 
 class TaskTableModel(QAbstractTableModel):
 

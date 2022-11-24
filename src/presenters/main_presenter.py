@@ -86,6 +86,7 @@ class MainPresenter:
                     logging.info(
                         f"Set Task '{description}' as \"{'Done' if status else 'Undone'}\""
                     )
+                self.main_view.tableView.viewport().update()
         except Exception:
             self.handle_exception()
 

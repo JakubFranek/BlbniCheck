@@ -46,7 +46,6 @@ class Model:
         self.event_task_edited()
 
     def set_task_status(self, index: int, status: bool) -> None:
-        # TODO: implement Task completion
         self.task_list[index].done = status
         self.event_task_edited()
 

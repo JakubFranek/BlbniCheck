@@ -12,16 +12,8 @@ class TaskTableProxy(QSortFilterProxyModel):
         if column_left != column_right:
             raise ValueError("Column indexes do not match.")
 
-        if column_left != 0:
-            data_left: str = self.sourceModel().data(left, Qt.ItemDataRole.DisplayRole)
-            data_right: str = self.sourceModel().data(
-                right, Qt.ItemDataRole.DisplayRole
-            )
-        else:
-            data_left: str = self.sourceModel().data(left, Qt.ItemDataRole.DisplayRole)
-            data_right: str = self.sourceModel().data(
-                right, Qt.ItemDataRole.DisplayRole
-            )
+        data_left: str = self.sourceModel().data(left, Qt.ItemDataRole.DisplayRole)
+        data_right: str = self.sourceModel().data(right, Qt.ItemDataRole.DisplayRole)
 
         if data_left and data_right:
             if column_left == 0:
@@ -38,5 +30,4 @@ class TaskTableProxy(QSortFilterProxyModel):
         elif data_left or data_right:
             return bool(data_left)
         else:
-            logging.warning("Data of 'falsy' Value compared during sorting")
             return False
