@@ -7,6 +7,8 @@ from PyQt6.QtWidgets import QFileDialog, QHeaderView, QMainWindow, QMenu, QMessa
 from resources.ui.Ui_main_window import Ui_MainWindow
 from src.views.utilities.icon_delegate import IconDelegate
 
+# TODO: Red Date Due text when Task is overdue
+
 
 class MainView(QMainWindow, Ui_MainWindow):
     signal_create_task = pyqtSignal()
