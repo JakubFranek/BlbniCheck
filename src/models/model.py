@@ -1,4 +1,5 @@
 from datetime import datetime
+from typing import Literal
 
 from src.models.task import Task
 from src.utilities.event import Event
@@ -28,7 +29,20 @@ class Model:
         del self.task_list[index]
         self.event_task_deleted()
 
-    def edit_task(self) -> None:
+    def edit_task(
+        self,
+        index: int,
+        description: str | Literal[False],
+        notes: str | None | Literal[False],
+        date_due: datetime | None | Literal[False],
+    ) -> None:
+        task = self.task_list[index]
+        if description is not False:
+            task.description = description
+        if notes is not False:
+            task.notes = notes
+        if date_due is not False:
+            task.date_due = date_due
         self.event_task_edited()
 
     def load_task_list(self, task_list: list[Task]) -> None:

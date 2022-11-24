@@ -18,21 +18,28 @@ class MainPresenter:
 
         self.current_file_path: str | None = None
 
-        self.main_view.signal_create_task.connect(self.create_task)
+        self.main_view.signal_create_task.connect(lambda: self.create_dialog(False))
+        self.main_view.signal_edit_task.connect(lambda: self.create_dialog(True))
         self.main_view.signal_delete_task.connect(self.delete_task)
         self.main_view.signal_open.connect(self.load_from_file)
         self.main_view.signal_save.connect(self.save_to_file)
         self.main_view.signal_save_as.connect(lambda: self.save_to_file(True))
         self.main_view.signal_exit.connect(self.close)
+        self.main_view.signal_table_selection_changed.connect(
+            self.table_selection_changed
+        )
 
         self.model.event_task_added.append(lambda: self.update_unsaved_changes(True))
         self.model.event_task_deleted.append(lambda: self.update_unsaved_changes(True))
+        self.model.event_task_edited.append(lambda: self.update_unsaved_changes(True))
         self.model.event_task_list_loaded.append(
             lambda: self.update_unsaved_changes(False)
         )
 
         self.task_table_proxy = TaskTableProxy()
-        self.task_table_model = TaskTableModel(self.model, self.main_view.tableView)
+        self.task_table_model = TaskTableModel(
+            self.model, self.main_view.tableView, self.task_table_proxy
+        )
         self.task_table_proxy.setSourceModel(self.task_table_model)
         self.main_view.tableView.setModel(self.task_table_proxy)
 
@@ -40,17 +47,19 @@ class MainPresenter:
             self.model, self.task_table_model
         )
 
+        self.main_view.finalize_setup()
         self.update_unsaved_changes(False)
+        self.table_selection_changed()
 
         logging.info("Showing MainView")
         self.main_view.show()
 
-    def create_task(self) -> None:
-        self.task_dialog_presenter.create_dialog()
+    def create_dialog(self, edit_mode: bool) -> None:
+        self.task_dialog_presenter.create_dialog(edit_mode)
 
     def delete_task(self) -> None:
         try:
-            source_rows = self.task_table_model.get_source_rows()
+            source_rows = self.task_table_model.get_selected_source_rows()
             if len(source_rows) >= 1:
                 for row in sorted(source_rows, reverse=True):
                     self.task_table_model.pre_delete_task(row)
@@ -122,6 +131,13 @@ class MainPresenter:
     def update_unsaved_changes(self, unsaved_changes: bool) -> None:
         self.unsaved_changes = unsaved_changes
         self.main_view.set_save_status(self.current_file_path, self.unsaved_changes)
+
+    def table_selection_changed(self) -> None:
+        indices = self.task_table_model.get_selected_source_rows()
+        if len(indices) > 0:
+            self.main_view.update_task_actions(True)
+        else:
+            self.main_view.update_task_actions(False)
 
     def handle_exception(self) -> None:
         display_text, display_details = handle_exception()  # type: ignore

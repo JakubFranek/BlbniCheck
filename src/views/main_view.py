@@ -6,6 +6,8 @@ from PyQt6.QtWidgets import QFileDialog, QMainWindow, QMessageBox
 
 from resources.ui.Ui_main_window import Ui_MainWindow
 
+# TODO: add context menu for table
+
 
 class MainView(QMainWindow, Ui_MainWindow):
     signal_create_task = pyqtSignal()
@@ -14,10 +16,12 @@ class MainView(QMainWindow, Ui_MainWindow):
     signal_save_as = pyqtSignal()
     signal_open = pyqtSignal()
     signal_exit = pyqtSignal()
+    signal_edit_task = pyqtSignal()
+    signal_table_selection_changed = pyqtSignal()
 
     def __init__(self) -> None:
         super().__init__()
-        self.full_setup()
+        self.initial_setup()
 
     def display_error(
         self,
@@ -83,11 +87,15 @@ class MainView(QMainWindow, Ui_MainWindow):
             self.actionSave.setEnabled(True)
             self.setWindowTitle("Blbnicheck - " + current_file_path + star_str)
 
+    def update_task_actions(self, selected: bool) -> None:
+        self.actionEdit_Task.setEnabled(selected)
+        self.actionDelete_Task.setEnabled(selected)
+
     def closeEvent(self, event: QCloseEvent) -> None:
         self.signal_exit.emit()
         event.ignore()
 
-    def full_setup(self) -> None:
+    def initial_setup(self) -> None:
         QDir.addSearchPath(
             "icons_24",
             os.path.join(QDir.currentPath(), "resources/icons/bonus/icons-24"),
@@ -112,3 +120,9 @@ class MainView(QMainWindow, Ui_MainWindow):
         self.actionSave_As.triggered.connect(lambda: self.signal_save_as.emit())
         self.actionOpen.triggered.connect(lambda: self.signal_open.emit())
         self.actionDelete_Task.triggered.connect(lambda: self.signal_delete_task.emit())
+        self.actionEdit_Task.triggered.connect(lambda: self.signal_edit_task.emit())
+
+    def finalize_setup(self) -> None:
+        self.tableView.selectionModel().selectionChanged.connect(
+            lambda: self.signal_table_selection_changed.emit()
+        )

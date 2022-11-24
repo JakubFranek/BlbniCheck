@@ -1,5 +1,8 @@
+from datetime import datetime
+from typing import Literal
+
 from PyQt6.QtCore import QDateTime, pyqtSignal
-from PyQt6.QtGui import QIcon
+from PyQt6.QtGui import QCloseEvent, QIcon
 from PyQt6.QtWidgets import QAbstractButton, QDialog, QDialogButtonBox, QMessageBox
 
 from resources.ui.Ui_task_dialog import Ui_TaskDialog
@@ -11,11 +14,17 @@ class TaskDialog(QDialog, Ui_TaskDialog):
     signal_cancel = pyqtSignal()
     signal_date_due_toggle = pyqtSignal()
 
-    def __init__(self) -> None:
+    def __init__(self, edit_mode: bool) -> None:
         super().__init__()
         self.setupUi(self)
 
-        self.setWindowIcon(QIcon("icons_24:plus.png"))
+        if edit_mode is True:
+            self.setWindowIcon(QIcon("icons_24:pencil.png"))
+            self.setWindowTitle("Edit selected Task(s)")
+        else:
+            self.setWindowIcon(QIcon("icons_24:plus.png"))
+            self.setWindowTitle("Create a new Task")
+
         self.dateTimeEditDueDate.setDateTime(QDateTime.currentDateTime())
         self.buttonBox.clicked.connect(self.handleButtonBoxClick)
         self.checkBox.stateChanged.connect(lambda: self.signal_date_due_toggle.emit())
@@ -27,9 +36,17 @@ class TaskDialog(QDialog, Ui_TaskDialog):
     def description(self) -> str:
         return self.lineEditDescription.text()
 
+    @description.setter
+    def description(self, value: str) -> None:
+        self.lineEditDescription.setText(value)
+
     @property
     def notes(self) -> str:
         return self.plainTextEditNotes.toPlainText()
+
+    @notes.setter
+    def notes(self, value: str) -> None:
+        self.plainTextEditNotes.setPlainText(value)
 
     @property
     def date_due_enabled(self) -> bool:
@@ -37,7 +54,34 @@ class TaskDialog(QDialog, Ui_TaskDialog):
 
     @property
     def date_due(self) -> str:
-        return self.dateTimeEditDueDate.dateTime().toString("dd.MM.yyyy hh:mm")
+        if (
+            self.dateTimeEditDueDate.minimumDateTime()
+            == self.dateTimeEditDueDate.dateTime()
+        ):
+            return self.dateTimeEditDueDate.specialValueText()
+        else:
+            return self.dateTimeEditDueDate.dateTime().toString("dd.MM.yyyy hh:mm")
+
+    def set_date_due(
+        self, value: datetime | None | Literal[False], special_text: str = ""
+    ) -> None:
+        if value is False:
+            self.dateTimeEditDueDate.setSpecialValueText(special_text)
+            self.dateTimeEditDueDate.setDateTime(
+                self.dateTimeEditDueDate.minimumDateTime()
+            )
+            self.checkBox.setChecked(True)
+        elif isinstance(value, datetime):
+            self.dateTimeEditDueDate.setDateTime(value)
+            self.checkBox.setChecked(True)
+        elif value is None:
+            self.dateTimeEditDueDate.setSpecialValueText(special_text)
+            self.dateTimeEditDueDate.setDateTime(
+                self.dateTimeEditDueDate.minimumDateTime()
+            )
+            self.checkBox.setChecked(False)
+        else:
+            raise ValueError("Invalid date_due setter input.")
 
     def handleButtonBoxClick(self, button: QAbstractButton) -> None:
         role = self.buttonBox.buttonRole(button)
@@ -49,6 +93,10 @@ class TaskDialog(QDialog, Ui_TaskDialog):
             self.signal_cancel.emit()
         else:
             raise ValueError("Unknown role of the clicked button in the ButtonBox")
+
+    def closeEvent(self, event: QCloseEvent) -> None:
+        event.ignore()
+        self.signal_cancel.emit()
 
     def display_error(
         self,

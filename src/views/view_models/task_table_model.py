@@ -92,7 +92,7 @@ class TaskTableModel(QAbstractTableModel):
     def post_delete_task(self) -> None:
         self.endRemoveRows()
 
-    def get_source_rows(self) -> set[int]:
+    def get_selected_source_rows(self) -> set[int]:
         indexes: list[QModelIndex] = self.view.selectedIndexes()
         if self.proxy is not None:
             return {self.proxy.mapToSource(index).row() for index in indexes}
