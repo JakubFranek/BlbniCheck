@@ -84,22 +84,6 @@ if __name__ == "__main__":
     logging.info("Creating Presenter")
     presenter = MainPresenter(main_view, model)
 
-    """ device_pixel_ratio = app.primaryScreen().devicePixelRatio()
-    logical_dpi = app.primaryScreen().logicalDotsPerInchY()
-    logging.info(f"{device_pixel_ratio=}")
-    logging.info(f"{logical_dpi=}")
-
-    if device_pixel_ratio >= 1.5:
-        font = app.font()
-        font.setPointSize(8)
-        app.setFont(font)
-        logging.info("Set QApplication font size to 8")
-    else:
-        font = app.font()
-        font.setPointSize(10)
-        app.setFont(font)
-        logging.info("Set QApplication font size to 10 ")
-    """
     font = app.font()
     font.setPointSize(10)
     app.setFont(font)
