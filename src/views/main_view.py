@@ -91,11 +91,11 @@ class MainView(QMainWindow, Ui_MainWindow):
     def initial_setup(self) -> None:
         QDir.addSearchPath(
             "icons_24",
-            os.path.join(QDir.currentPath(), "resources/icons/bonus/icons-24"),
+            os.path.join(QDir.currentPath(), "resources/icons/icons-24"),
         )
         QDir.addSearchPath(
             "icons_16",
-            os.path.join(QDir.currentPath(), "resources/icons/icons"),
+            os.path.join(QDir.currentPath(), "resources/icons/icons-16"),
         )
         QDir.addSearchPath(
             "icons_custom",

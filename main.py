@@ -53,10 +53,12 @@ if __name__ == "__main__":
 
     sys.excepthook = handle_uncaught_exception
 
+    dir_path = os.path.dirname(os.path.realpath(__file__))
     start_dt = datetime.now()
 
     logging.basicConfig(
-        filename=r"D:\Coding\BlbniCheck\logs\debug_"
+        filename=dir_path
+        + r"\logs\debug_"
         + start_dt.strftime("%Y_%m_%d_%Hh%Mm%Ss")
         + ".log",
         level=logging.DEBUG,
