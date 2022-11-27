@@ -25,5 +25,7 @@ def test_init_long_desc_fail() -> None:
     task_desc = "A" * 50
     task_notes = "Some extra notes"
 
-    with pytest.raises(ValueError):
+    with pytest.raises(
+        ValueError, match=r"Task description length \(50\) can be at most*"
+    ):
         Task(task_desc, task_notes)
