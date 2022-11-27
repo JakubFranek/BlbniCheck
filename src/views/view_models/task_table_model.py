@@ -53,10 +53,16 @@ class TaskTableModel(QAbstractTableModel):
             elif column == view_constants.COLUMN_DATE_DUE:
                 return Qt.AlignmentFlag.AlignRight | Qt.AlignmentFlag.AlignVCenter
         elif role == Qt.ItemDataRole.ForegroundRole:
-            if column == view_constants.COLUMN_DATE_DUE:
-                date_due = task.date_due
-                if date_due and date_due < datetime.now():
-                    return QColor(QColorConstants.Red)
+            if column == view_constants.COLUMN_DESCRIPTION:
+                if task.done is True:
+                    return QColor(QColorConstants.Gray)
+            elif column == view_constants.COLUMN_DATE_DUE:
+                if task.done is True:
+                    return QColor(QColorConstants.Gray)
+                else:
+                    date_due = task.date_due
+                    if date_due and task.done is not True and date_due < datetime.now():
+                        return QColor(QColorConstants.Red)
         elif role == Qt.ItemDataRole.ToolTipRole:
             task_notes = task.notes
             if task_notes is not False:
