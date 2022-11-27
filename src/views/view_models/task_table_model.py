@@ -79,7 +79,7 @@ class TaskTableModel(QAbstractTableModel):
         if index.isValid():
             return 0
         else:
-            if self.show_done_tasks:
+            if self.show_done_tasks is True:
                 return len(self.model.task_list)
             else:
                 return sum(task.done is False for task in self.model.task_list)

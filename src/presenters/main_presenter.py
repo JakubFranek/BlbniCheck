@@ -86,10 +86,23 @@ class MainPresenter:
     def set_tasks_status(self, status: bool) -> None:
         try:
             indices = self.task_table_model.get_selected_source_rows()
+            show_done_tasks = self.task_table_model.show_done_tasks
             if len(indices) >= 1:
-                for index in indices:
+                for index in sorted(indices, reverse=True):
                     description = self.model.task_list[index].description
+
+                    """ The following checks are needed to make sure the QTableView row
+                    disappears when Done Tasks are supposed to be hidden and an Undone
+                    Task is set to Done
+                    """
+                    if show_done_tasks is False and status is True:
+                        self.task_table_model.pre_delete_task(index)
+
                     self.model.set_task_status(index, status)
+
+                    if show_done_tasks is False and status is True:
+                        self.task_table_model.post_delete_task()
+
                     logging.info(
                         f"Set Task '{description}' as \"{'Done' if status else 'Undone'}\""
                     )
