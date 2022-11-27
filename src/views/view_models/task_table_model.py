@@ -76,7 +76,7 @@ class TaskTableModel(QAbstractTableModel):
                 return task_notes
 
     def rowCount(self, index: QModelIndex = ...) -> int:  # noqa:U100
-        if index.isValid():
+        if isinstance(index, QModelIndex) and index.isValid():
             return 0
         else:
             if self.show_done_tasks is True:
@@ -85,7 +85,7 @@ class TaskTableModel(QAbstractTableModel):
                 return sum(task.done is False for task in self.model.task_list)
 
     def columnCount(self, index: QModelIndex = ...) -> int:  # noqa:U100
-        if index.isValid():
+        if isinstance(index, QModelIndex) and index.isValid():
             return 0
         else:
             return view_constants.COLUMN_COUNT

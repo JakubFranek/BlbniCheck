@@ -4,6 +4,7 @@ from PyQt6.QtCore import QDir, pyqtSignal
 from PyQt6.QtGui import QCloseEvent, QContextMenuEvent, QCursor, QIcon
 from PyQt6.QtWidgets import QFileDialog, QHeaderView, QMainWindow, QMenu, QMessageBox
 
+import src.views.constants as view_constants
 from resources.ui.Ui_main_window import Ui_MainWindow
 from src.views.utilities.icon_delegate import IconDelegate
 
@@ -148,10 +149,13 @@ class MainView(QMainWindow, Ui_MainWindow):
         """ For some reason the lines below cause the program to crash on startup
         without error message if placed in initial_setup() """
         self.tableView.horizontalHeader().setSectionResizeMode(
-            0, QHeaderView.ResizeMode.ResizeToContents
+            view_constants.COLUMN_STATUS, QHeaderView.ResizeMode.ResizeToContents
         )
         self.tableView.horizontalHeader().setSectionResizeMode(
-            1, QHeaderView.ResizeMode.Stretch
+            view_constants.COLUMN_DESCRIPTION, QHeaderView.ResizeMode.Stretch
+        )
+        self.tableView.horizontalHeader().setSectionResizeMode(
+            view_constants.COLUMN_DATE_DUE, QHeaderView.ResizeMode.ResizeToContents
         )
 
     def display_error(
