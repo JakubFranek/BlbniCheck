@@ -19,13 +19,19 @@ class CustomJSONDecoder(json.JSONDecoder):
                 notes = obj["notes"]
                 done = obj["done"]
                 temp_date_due = obj["date_due"]
+                temp_date_done = obj["date_done"]
                 date_created = obj["date_created"]
+
                 if temp_date_due == "None":
                     date_due = None
                 else:
                     date_due = datetime.fromisoformat(temp_date_due)
                 task = Task(description, notes, date_due)
                 task._date_created = datetime.fromisoformat(date_created)
+                if temp_date_done == "None":
+                    task._date_done = None
+                else:
+                    task._date_done = datetime.fromisoformat(temp_date_done)
                 task.done = done
                 return task
         return obj

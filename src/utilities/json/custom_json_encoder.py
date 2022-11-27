@@ -15,6 +15,9 @@ class CustomJSONEncoder(json.JSONEncoder):
             return arg.isoformat()
         elif isinstance(arg, Task):
             date_due = arg.date_due.isoformat() if arg.date_due is not None else "None"
+            date_done = (
+                arg.date_done.isoformat() if arg.date_done is not None else "None"
+            )
             return {
                 "datatype": "Task",
                 "description": arg.description,
@@ -22,6 +25,7 @@ class CustomJSONEncoder(json.JSONEncoder):
                 "done": arg.done,
                 "date_due": date_due,
                 "date_created": arg.date_created.isoformat(),
+                "date_done": date_done,
             }
         elif isinstance(arg, Decimal):
             return {"datatype": "Decimal", "number": str(arg)}
