@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>322</width>
-    <height>161</height>
+    <height>163</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -62,7 +62,7 @@
         <bool>true</bool>
        </property>
        <property name="placeholderText">
-        <string>Enter optional details</string>
+        <string>Enter optional details (to be shown in Task tooltip)</string>
        </property>
       </widget>
      </item>

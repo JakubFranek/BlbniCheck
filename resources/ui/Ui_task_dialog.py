@@ -12,7 +12,7 @@ from PyQt6 import QtCore, QtGui, QtWidgets
 class Ui_TaskDialog(object):
     def setupUi(self, TaskDialog):
         TaskDialog.setObjectName("TaskDialog")
-        TaskDialog.resize(322, 161)
+        TaskDialog.resize(322, 163)
         TaskDialog.setLocale(QtCore.QLocale(QtCore.QLocale.Language.English, QtCore.QLocale.Country.UnitedKingdom))
         TaskDialog.setModal(True)
         self.verticalLayout = QtWidgets.QVBoxLayout(TaskDialog)
@@ -67,5 +67,5 @@ class Ui_TaskDialog(object):
         self.lineEditDescription.setPlaceholderText(_translate("TaskDialog", "Enter the Task title"))
         self.labelNotes.setText(_translate("TaskDialog", "Notes"))
         self.labelDueDate.setText(_translate("TaskDialog", "Due Date"))
-        self.plainTextEditNotes.setPlaceholderText(_translate("TaskDialog", "Enter optional details"))
+        self.plainTextEditNotes.setPlaceholderText(_translate("TaskDialog", "Enter optional details (to be shown in Task tooltip)"))
         self.checkBox.setToolTip(_translate("TaskDialog", "Do not check if the Task has no Due Date."))

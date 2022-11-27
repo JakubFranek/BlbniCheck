@@ -37,17 +37,25 @@ class Model:
         date_due: datetime | None | Literal[False],
     ) -> None:
         task = self.task_list[index]
-        if description is not False:
+        changed = False
+
+        if description is not False and description != task.description:
             task.description = description
-        if notes is not False:
+            changed = True
+        if notes is not False and notes != task.notes:
             task.notes = notes
-        if date_due is not False:
+            changed = True
+        if date_due is not False and date_due != task.date_due:
             task.date_due = date_due
-        self.event_task_edited()
+            changed = True
+
+        if changed is True:
+            self.event_task_edited()
 
     def set_task_status(self, index: int, status: bool) -> None:
-        self.task_list[index].done = status
-        self.event_task_edited()
+        if status != self.task_list[index].done:
+            self.task_list[index].done = status
+            self.event_task_edited()
 
     def load_task_list(self, task_list: list[Task]) -> None:
         self._task_list = task_list
