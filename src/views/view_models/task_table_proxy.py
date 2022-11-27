@@ -3,6 +3,8 @@ from datetime import datetime
 
 from PyQt6.QtCore import QModelIndex, QSortFilterProxyModel, Qt
 
+import src.views.constants as view_constants
+
 
 class TaskTableProxy(QSortFilterProxyModel):
     def lessThan(self, left: QModelIndex, right: QModelIndex) -> bool:
@@ -16,11 +18,11 @@ class TaskTableProxy(QSortFilterProxyModel):
         data_right: str = self.sourceModel().data(right, Qt.ItemDataRole.DisplayRole)
 
         if data_left and data_right:
-            if column_left == 0:
+            if column_left == view_constants.COLUMN_STATUS:
                 return data_left < data_right
-            if column_left == 1:
+            if column_left == view_constants.COLUMN_DESCRIPTION:
                 return str(data_left) < str(data_right)
-            elif column_left == 2:
+            elif column_left == view_constants.COLUMN_DATE_DUE:
                 datetime_left = datetime.strptime(data_left, "%d/%m/%Y %H:%M")
                 datetime_right = datetime.strptime(data_right, "%d/%m/%Y %H:%M")
                 return datetime_left < datetime_right

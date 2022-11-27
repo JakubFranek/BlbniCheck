@@ -5,12 +5,12 @@ from PyQt6.QtCore import QAbstractTableModel, QModelIndex, QSortFilterProxyModel
 from PyQt6.QtGui import QColor, QColorConstants, QIcon
 from PyQt6.QtWidgets import QTableView
 
+import src.views.constants as view_constants
 from src.models.model import Model
 
 
 # TODO: change column index literals to constants (shared by Proxy somehow?)
 # TODO: fix sorting of completed tasks by Due Date
-# TODO: Red Date Due text when Task is overdue
 class TaskTableModel(QAbstractTableModel):
 
     headers = ("Status", "Description", "Date Due")
@@ -32,11 +32,11 @@ class TaskTableModel(QAbstractTableModel):
         if role == Qt.ItemDataRole.DisplayRole:
             task = self.model.task_list[index.row()]
 
-            if column == 0:
+            if column == view_constants.COLUMN_STATUS:
                 return task.done
-            elif column == 1:
+            elif column == view_constants.COLUMN_DESCRIPTION:
                 return task.description
-            elif column == 2:
+            elif column == view_constants.COLUMN_DATE_DUE:
                 if task.date_due is not None:
                     return task.date_due.strftime("%d/%m/%Y %H:%M")
                 else:
@@ -47,24 +47,24 @@ class TaskTableModel(QAbstractTableModel):
                 )
         elif role == Qt.ItemDataRole.DecorationRole:
             task = self.model.task_list[index.row()]
-            if column == 0:
+            if column == view_constants.COLUMN_STATUS:
                 if task.done is True:
                     return QIcon("icons_16:tick-button.png")
                 else:
                     return QIcon("icons_16:cross-button.png")
         elif role == Qt.ItemDataRole.TextAlignmentRole:
-            if column == 0:
+            if column == view_constants.COLUMN_STATUS:
                 return Qt.AlignmentFlag.AlignCenter | Qt.AlignmentFlag.AlignVCenter
-            elif column == 1:
+            elif column == view_constants.COLUMN_DESCRIPTION:
                 return Qt.AlignmentFlag.AlignLeft | Qt.AlignmentFlag.AlignVCenter
-            elif column == 2:
+            elif column == view_constants.COLUMN_DATE_DUE:
                 return Qt.AlignmentFlag.AlignRight | Qt.AlignmentFlag.AlignVCenter
             else:
                 raise ValueError(
                     f"Column index must be less than or equal to 2 (is {column})."
                 )
         elif role == Qt.ItemDataRole.ForegroundRole:
-            if column == 2:
+            if column == view_constants.COLUMN_DATE_DUE:
                 date_due = self.model.task_list[index.row()].date_due
                 if date_due and date_due < datetime.now():
                     return QColor(QColorConstants.Red)
@@ -77,7 +77,7 @@ class TaskTableModel(QAbstractTableModel):
         return len(self.model.task_list)
 
     def columnCount(self, index: QModelIndex = ...) -> int:  # noqa:U100
-        return 3
+        return view_constants.COLUMN_COUNT
 
     def headerData(
         self, section: int, orientation: Qt.Orientation, role: int = ...
