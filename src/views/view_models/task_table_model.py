@@ -9,7 +9,6 @@ import src.views.constants as view_constants
 from src.models.model import Model
 
 
-# TODO: change column index literals to constants (shared by Proxy somehow?)
 # TODO: fix sorting of completed tasks by Due Date
 class TaskTableModel(QAbstractTableModel):
 
@@ -28,10 +27,9 @@ class TaskTableModel(QAbstractTableModel):
 
     def data(self, index: QModelIndex, role: Qt.ItemDataRole = ...) -> Any:
         column = index.column()
+        task = self.model.task_list[index.row()]
 
         if role == Qt.ItemDataRole.DisplayRole:
-            task = self.model.task_list[index.row()]
-
             if column == view_constants.COLUMN_STATUS:
                 return task.done
             elif column == view_constants.COLUMN_DESCRIPTION:
@@ -41,12 +39,7 @@ class TaskTableModel(QAbstractTableModel):
                     return task.date_due.strftime("%d/%m/%Y %H:%M")
                 else:
                     return ""
-            else:
-                raise ValueError(
-                    f"Column index must be less than or equal to 2 (is {column})."
-                )
         elif role == Qt.ItemDataRole.DecorationRole:
-            task = self.model.task_list[index.row()]
             if column == view_constants.COLUMN_STATUS:
                 if task.done is True:
                     return QIcon("icons_16:tick-button.png")
@@ -59,17 +52,13 @@ class TaskTableModel(QAbstractTableModel):
                 return Qt.AlignmentFlag.AlignLeft | Qt.AlignmentFlag.AlignVCenter
             elif column == view_constants.COLUMN_DATE_DUE:
                 return Qt.AlignmentFlag.AlignRight | Qt.AlignmentFlag.AlignVCenter
-            else:
-                raise ValueError(
-                    f"Column index must be less than or equal to 2 (is {column})."
-                )
         elif role == Qt.ItemDataRole.ForegroundRole:
             if column == view_constants.COLUMN_DATE_DUE:
-                date_due = self.model.task_list[index.row()].date_due
+                date_due = task.date_due
                 if date_due and date_due < datetime.now():
                     return QColor(QColorConstants.Red)
         elif role == Qt.ItemDataRole.ToolTipRole:
-            task_notes = self.model.task_list[index.row()].notes
+            task_notes = task.notes
             if task_notes is not False:
                 return task_notes
 
@@ -106,7 +95,9 @@ class TaskTableModel(QAbstractTableModel):
 
     def post_new_list(self) -> None:
         self.endResetModel()
-        self.view.sortByColumn(2, Qt.SortOrder.AscendingOrder)
+        self.view.sortByColumn(
+            view_constants.COLUMN_DATE_DUE, Qt.SortOrder.AscendingOrder
+        )
         self.view.setSortingEnabled(True)
 
     def pre_delete_task(self, row: int) -> None:

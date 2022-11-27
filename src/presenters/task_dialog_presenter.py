@@ -2,7 +2,7 @@ import logging
 from datetime import datetime
 
 from src.models.model import Model
-from src.utilities.handle_exception import handle_exception
+from src.utilities.handle_exception import get_exception_info
 from src.views.task_dialog import TaskDialog
 from src.views.view_models.task_table_model import TaskTableModel
 
@@ -131,5 +131,5 @@ class TaskDialogPresenter:
             self.dialog.set_date_due(False, self.STRING_DIFFERENT_VALUES)
 
     def handle_exception(self) -> None:
-        display_text, display_details = handle_exception()  # type: ignore
+        display_text, display_details = get_exception_info()  # type: ignore
         self.dialog.display_error(display_text, display_details)
