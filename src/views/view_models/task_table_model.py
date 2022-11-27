@@ -1,12 +1,16 @@
+from datetime import datetime
 from typing import Any
 
 from PyQt6.QtCore import QAbstractTableModel, QModelIndex, QSortFilterProxyModel, Qt
-from PyQt6.QtGui import QIcon
+from PyQt6.QtGui import QColor, QColorConstants, QIcon
 from PyQt6.QtWidgets import QTableView
 
 from src.models.model import Model
 
 
+# TODO: change column index literals to constants (shared by Proxy somehow?)
+# TODO: fix sorting of completed tasks by Due Date
+# TODO: Red Date Due text when Task is overdue
 class TaskTableModel(QAbstractTableModel):
 
     headers = ("Status", "Description", "Date Due")
@@ -59,6 +63,15 @@ class TaskTableModel(QAbstractTableModel):
                 raise ValueError(
                     f"Column index must be less than or equal to 2 (is {column})."
                 )
+        elif role == Qt.ItemDataRole.ForegroundRole:
+            if column == 2:
+                date_due = self.model.task_list[index.row()].date_due
+                if date_due and date_due < datetime.now():
+                    return QColor(QColorConstants.Red)
+        elif role == Qt.ItemDataRole.ToolTipRole:
+            task_notes = self.model.task_list[index.row()].notes
+            if task_notes is not False:
+                return task_notes
 
     def rowCount(self, index: QModelIndex = ...) -> int:  # noqa:U100
         return len(self.model.task_list)
