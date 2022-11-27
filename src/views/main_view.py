@@ -19,6 +19,7 @@ class MainView(QMainWindow, Ui_MainWindow):
     signal_table_selection_changed = pyqtSignal()
     signal_set_tasks_done = pyqtSignal()
     signal_set_tasks_undone = pyqtSignal()
+    signal_show_done_tasks_changed = pyqtSignal(bool)
 
     def __init__(self) -> None:
         super().__init__()
@@ -96,6 +97,10 @@ class MainView(QMainWindow, Ui_MainWindow):
             "icons_16",
             os.path.join(QDir.currentPath(), "resources/icons/icons"),
         )
+        QDir.addSearchPath(
+            "icons_custom",
+            os.path.join(QDir.currentPath(), "resources/icons/icons-custom"),
+        )
 
         self.setupUi(self)
 
@@ -108,6 +113,9 @@ class MainView(QMainWindow, Ui_MainWindow):
         self.actionDelete_Task.setIcon(QIcon("icons_16:minus.png"))
         self.actionSet_as_Done.setIcon(QIcon("icons_16:tick-button.png"))
         self.actionSet_as_Undone.setIcon(QIcon("icons_16:cross-button.png"))
+        self.actionShow_Done_Tasks.setIcon(QIcon("icons_custom:eye-tick.png"))
+
+        self.actionShow_Done_Tasks.setCheckable(True)
 
         self.actionCreate_Task.triggered.connect(lambda: self.signal_create_task.emit())
         self.actionSave.triggered.connect(lambda: self.signal_save.emit())
@@ -120,6 +128,11 @@ class MainView(QMainWindow, Ui_MainWindow):
         )
         self.actionSet_as_Undone.triggered.connect(
             lambda: self.signal_set_tasks_undone.emit()
+        )
+        self.actionShow_Done_Tasks.triggered.connect(
+            lambda: self.signal_show_done_tasks_changed.emit(
+                self.actionShow_Done_Tasks.isChecked()
+            )
         )
 
         self.tableView.doubleClicked.connect(lambda: self.signal_edit_task.emit())

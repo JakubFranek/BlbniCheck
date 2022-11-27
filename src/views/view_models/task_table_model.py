@@ -9,7 +9,6 @@ import src.views.constants as view_constants
 from src.models.model import Model
 
 
-# TODO: fix sorting of completed tasks by Due Date
 class TaskTableModel(QAbstractTableModel):
 
     headers = ("Status", "Description", "Date Due")
@@ -19,15 +18,23 @@ class TaskTableModel(QAbstractTableModel):
         model: Model,
         view: QTableView,
         proxy: QSortFilterProxyModel | None = None,
+        show_done_tasks: bool = True,
     ) -> None:
         super().__init__()
         self.model = model
         self.view = view
         self.proxy = proxy
+        self.show_done_tasks = show_done_tasks
 
     def data(self, index: QModelIndex, role: Qt.ItemDataRole = ...) -> Any:
         column = index.column()
-        task = self.model.task_list[index.row()]
+        if self.show_done_tasks is True:
+            task = self.model.task_list[index.row()]
+        else:
+            filtered_list = [
+                task for task in self.model.task_list if task.done is False
+            ]
+            task = filtered_list[index.row()]
 
         if role == Qt.ItemDataRole.DisplayRole:
             if column == view_constants.COLUMN_STATUS:
@@ -69,7 +76,10 @@ class TaskTableModel(QAbstractTableModel):
                 return task_notes
 
     def rowCount(self, index: QModelIndex = ...) -> int:  # noqa:U100
-        return len(self.model.task_list)
+        if self.show_done_tasks:
+            return len(self.model.task_list)
+        else:
+            return sum(task.done is False for task in self.model.task_list)
 
     def columnCount(self, index: QModelIndex = ...) -> int:  # noqa:U100
         return view_constants.COLUMN_COUNT
@@ -104,6 +114,14 @@ class TaskTableModel(QAbstractTableModel):
         self.view.sortByColumn(
             view_constants.COLUMN_DATE_DUE, Qt.SortOrder.AscendingOrder
         )
+        self.view.setSortingEnabled(True)
+
+    def pre_reset_model(self) -> None:
+        self.view.setSortingEnabled(False)
+        self.beginResetModel()
+
+    def post_reset_model(self) -> None:
+        self.endResetModel()
         self.view.setSortingEnabled(True)
 
     def pre_delete_task(self, row: int) -> None:

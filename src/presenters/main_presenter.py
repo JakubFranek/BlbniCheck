@@ -34,6 +34,9 @@ class MainPresenter:
         self.main_view.signal_table_selection_changed.connect(
             self.table_selection_changed
         )
+        self.main_view.signal_show_done_tasks_changed.connect(
+            self.show_done_tasks_changed
+        )
 
         self.model.event_task_added.append(lambda: self.update_unsaved_changes(True))
         self.model.event_task_deleted.append(lambda: self.update_unsaved_changes(True))
@@ -44,7 +47,10 @@ class MainPresenter:
 
         self.task_table_proxy = TaskTableProxy()
         self.task_table_model = TaskTableModel(
-            self.model, self.main_view.tableView, self.task_table_proxy
+            self.model,
+            self.main_view.tableView,
+            self.task_table_proxy,
+            show_done_tasks=True,
         )
         self.task_table_proxy.setSourceModel(self.task_table_model)
         self.main_view.tableView.setModel(self.task_table_proxy)
@@ -54,6 +60,7 @@ class MainPresenter:
         )
 
         self.main_view.finalize_setup()
+        self.main_view.actionShow_Done_Tasks.setChecked(True)
         self.update_unsaved_changes(False)
         self.table_selection_changed()
 
@@ -133,6 +140,11 @@ class MainPresenter:
                 logging.info("Invalid or no file path received, file load cancelled")
         except Exception:
             self.handle_exception()
+
+    def show_done_tasks_changed(self, show: bool) -> (None):
+        self.task_table_model.pre_reset_model()
+        self.task_table_model.show_done_tasks = show
+        self.task_table_model.post_reset_model()
 
     def close(self) -> None:
         logging.info("Close called...")
