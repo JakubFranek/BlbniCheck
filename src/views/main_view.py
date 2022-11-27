@@ -104,7 +104,7 @@ class MainView(QMainWindow, Ui_MainWindow):
 
         self.setupUi(self)
 
-        self.setWindowIcon(QIcon("icons_24:tick.png"))
+        self.setWindowIcon(QIcon("icons_custom:tick.ico"))
         self.actionOpen.setIcon(QIcon("icons_16:folder-open.png"))
         self.actionSave.setIcon(QIcon("icons_16:disk.png"))
         self.actionSave_As.setIcon(QIcon("icons_16:disks.png"))

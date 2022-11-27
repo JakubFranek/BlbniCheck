@@ -11,3 +11,4 @@ icons
 .pytest_cache
 .coverage
 coverage.xml
+installer
