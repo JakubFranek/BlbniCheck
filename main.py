@@ -53,12 +53,16 @@ if __name__ == "__main__":
 
     sys.excepthook = handle_uncaught_exception
 
-    dir_path = os.path.dirname(os.path.realpath(__file__))
-    start_dt = datetime.now()
+    dir_current = os.path.dirname(os.path.realpath(__file__))
 
+    dir_logs = dir_current + r"\logs"
+    if not os.path.exists(dir_logs):
+        os.makedirs(dir_logs)
+
+    start_dt = datetime.now()
     logging.basicConfig(
-        filename=dir_path
-        + r"\logs\debug_"
+        filename=dir_logs
+        + r"\debug_"
         + start_dt.strftime("%Y_%m_%d_%Hh%Mm%Ss")
         + ".log",
         level=logging.DEBUG,
