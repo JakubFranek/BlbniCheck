@@ -142,6 +142,7 @@ class MainPresenter:
             self.handle_exception()
 
     def show_done_tasks_changed(self, show: bool) -> (None):
+        logging.info(f"Changing Show Done Tasks setting to '{show}'")
         self.task_table_model.pre_reset_model()
         self.task_table_model.show_done_tasks = show
         self.task_table_model.post_reset_model()

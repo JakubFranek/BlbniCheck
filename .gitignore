@@ -9,3 +9,5 @@ todo.txt
 saved_data
 icons
 .pytest_cache
+.coverage
+coverage.xml

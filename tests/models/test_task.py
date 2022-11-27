@@ -4,12 +4,8 @@ import pytest
 
 from src.models.task import Task
 
-# TODO: write more Task, Model tests incl. param
-# TODO: install pytest-qt and make some Qt tests (incl. QAbstractTableModel)
-# TODO: check coverage
 
-
-def test_init_pass():
+def test_init_pass() -> None:
     task_desc = "A Test Task"
     task_notes = "Some extra notes"
 
@@ -25,7 +21,7 @@ def test_init_pass():
     assert dt_diff.seconds < 1
 
 
-def test_init_long_desc_fail():
+def test_init_long_desc_fail() -> None:
     task_desc = "A" * 50
     task_notes = "Some extra notes"
 

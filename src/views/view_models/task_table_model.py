@@ -76,13 +76,19 @@ class TaskTableModel(QAbstractTableModel):
                 return task_notes
 
     def rowCount(self, index: QModelIndex = ...) -> int:  # noqa:U100
-        if self.show_done_tasks:
-            return len(self.model.task_list)
+        if index.isValid():
+            return 0
         else:
-            return sum(task.done is False for task in self.model.task_list)
+            if self.show_done_tasks:
+                return len(self.model.task_list)
+            else:
+                return sum(task.done is False for task in self.model.task_list)
 
     def columnCount(self, index: QModelIndex = ...) -> int:  # noqa:U100
-        return view_constants.COLUMN_COUNT
+        if index.isValid():
+            return 0
+        else:
+            return view_constants.COLUMN_COUNT
 
     def headerData(
         self, section: int, orientation: Qt.Orientation, role: int = ...
