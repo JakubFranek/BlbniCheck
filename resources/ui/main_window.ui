@@ -101,7 +101,7 @@
   </action>
   <action name="actionEdit_Task">
    <property name="text">
-    <string>Edit Task</string>
+    <string>Edit Task(s)</string>
    </property>
    <property name="toolTip">
     <string>Edit selected Task(s)</string>
@@ -115,7 +115,7 @@
   </action>
   <action name="actionDelete_Task">
    <property name="text">
-    <string>Delete Task</string>
+    <string>Delete Task(s)</string>
    </property>
    <property name="toolTip">
     <string>Delete selected Task(s)</string>
