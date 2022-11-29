@@ -25,11 +25,11 @@ class MainPresenter:
         self.main_view.signal_save.connect(self.save_to_file)
         self.main_view.signal_save_as.connect(lambda: self.save_to_file(True))
         self.main_view.signal_exit.connect(self.close)
-        self.main_view.signal_set_tasks_done.connect(
-            lambda: self.set_tasks_status(True)
+        self.main_view.signal_set_tasks_status.connect(
+            lambda status: self.set_tasks_status(False, status)
         )
-        self.main_view.signal_set_tasks_undone.connect(
-            lambda: self.set_tasks_status(False)
+        self.main_view.signal_toggle_tasks_status.connect(
+            lambda: self.set_tasks_status(True)
         )
         self.main_view.signal_table_selection_changed.connect(
             self.table_selection_changed
@@ -83,13 +83,14 @@ class MainPresenter:
         except Exception:
             self.handle_exception()
 
-    def set_tasks_status(self, status: bool) -> None:
+    def set_tasks_status(self, toggle: bool, status: bool | None = None) -> None:
         try:
             indices = self.task_table_model.get_selected_source_rows()
             show_done_tasks = self.task_table_model.show_done_tasks
             if len(indices) >= 1:
                 for index in sorted(indices, reverse=True):
-                    description = self.model.task_list[index].description
+                    task = self.model.task_list[index]
+                    description = task.description
 
                     """ The following checks are needed to make sure the QTableView row
                     disappears when Done Tasks are supposed to be hidden and an Undone
@@ -98,6 +99,13 @@ class MainPresenter:
                     if show_done_tasks is False and status is True:
                         self.task_table_model.pre_delete_task(index)
 
+                    if toggle is True:
+                        status = not task.done
+                    else:
+                        if status is None:
+                            raise ValueError(
+                                "If toggle is False, status must be a bool."
+                            )
                     self.model.set_task_status(index, status)
 
                     if show_done_tasks is False and status is True:

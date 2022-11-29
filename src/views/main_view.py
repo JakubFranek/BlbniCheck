@@ -1,6 +1,6 @@
 import os
 
-from PyQt6.QtCore import QDir, pyqtSignal
+from PyQt6.QtCore import QDir, QModelIndex, pyqtSignal
 from PyQt6.QtGui import QCloseEvent, QContextMenuEvent, QCursor, QIcon
 from PyQt6.QtWidgets import QFileDialog, QHeaderView, QMainWindow, QMenu, QMessageBox
 
@@ -18,8 +18,8 @@ class MainView(QMainWindow, Ui_MainWindow):
     signal_exit = pyqtSignal()
     signal_edit_task = pyqtSignal()
     signal_table_selection_changed = pyqtSignal()
-    signal_set_tasks_done = pyqtSignal()
-    signal_set_tasks_undone = pyqtSignal()
+    signal_set_tasks_status = pyqtSignal(bool)
+    signal_toggle_tasks_status = pyqtSignal()
     signal_show_done_tasks_changed = pyqtSignal(bool)
 
     def __init__(self) -> None:
@@ -85,6 +85,13 @@ class MainView(QMainWindow, Ui_MainWindow):
         self.menu.addAction(self.actionEdit_Task)
         self.menu.popup(QCursor.pos())
 
+    def table_double_clicked(self, index: QModelIndex) -> None:
+        column = index.column()
+        if column != view_constants.COLUMN_STATUS:
+            self.signal_edit_task.emit()
+        else:
+            self.signal_toggle_tasks_status.emit()
+
     def closeEvent(self, event: QCloseEvent) -> None:
         self.signal_exit.emit()
         event.ignore()
@@ -125,10 +132,10 @@ class MainView(QMainWindow, Ui_MainWindow):
         self.actionDelete_Task.triggered.connect(lambda: self.signal_delete_task.emit())
         self.actionEdit_Task.triggered.connect(lambda: self.signal_edit_task.emit())
         self.actionSet_as_Done.triggered.connect(
-            lambda: self.signal_set_tasks_done.emit()
+            lambda: self.signal_set_tasks_status.emit(True)
         )
         self.actionSet_as_Undone.triggered.connect(
-            lambda: self.signal_set_tasks_undone.emit()
+            lambda: self.signal_set_tasks_status.emit(False)
         )
         self.actionShow_Done_Tasks.triggered.connect(
             lambda: self.signal_show_done_tasks_changed.emit(
@@ -136,7 +143,9 @@ class MainView(QMainWindow, Ui_MainWindow):
             )
         )
 
-        self.tableView.doubleClicked.connect(lambda: self.signal_edit_task.emit())
+        self.tableView.doubleClicked.connect(
+            lambda index: self.table_double_clicked(index)
+        )
 
         icon_delegate = IconDelegate(self.tableView)
         self.tableView.setItemDelegate(icon_delegate)
