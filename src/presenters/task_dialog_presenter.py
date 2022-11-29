@@ -28,6 +28,8 @@ class TaskDialogPresenter:
 
         if edit_mode is True:
             self.populate_widgets()
+        else:
+            self.dialog.set_date_due(None, self.STRING_NO_DATE_DUE_SET)
 
         logging.info(f"Running TaskDialog ({edit_mode=})...")
         self.dialog.exec()
@@ -93,8 +95,14 @@ class TaskDialogPresenter:
     def date_due_toggled(self) -> None:
         if self.dialog.date_due_enabled is True:
             self.dialog.dateTimeEditDueDate.setEnabled(True)
+            current_date_time = self.dialog.dateTimeEditDueDate.dateTime()
+            if current_date_time == self.dialog.dateTimeEditDueDate.minimumDateTime():
+                self.dialog.dateTimeEditDueDate.setDateTime(datetime.now())
         else:
             self.dialog.dateTimeEditDueDate.setEnabled(False)
+            self.dialog.dateTimeEditDueDate.setDateTime(
+                self.dialog.dateTimeEditDueDate.minimumDateTime()
+            )
 
     def populate_widgets(self) -> None:
         indices = self.table_model.get_selected_source_rows()
