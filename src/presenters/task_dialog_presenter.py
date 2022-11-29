@@ -20,7 +20,6 @@ class TaskDialogPresenter:
 
         if edit_mode is True:
             self.dialog.signal_ok.connect(self.edit_task)
-            self.dialog.signal_apply.connect(lambda: self.edit_task(False))
         else:
             self.dialog.signal_ok.connect(self.create_task)
             self.dialog.signal_apply.connect(lambda: self.create_task(False))
@@ -53,7 +52,7 @@ class TaskDialogPresenter:
         except Exception:
             self.handle_exception()
 
-    def edit_task(self, close_dialog: bool = True) -> None:
+    def edit_task(self) -> None:
         indices = self.table_model.get_selected_source_rows()
         logging.info(f"Editing {len(indices)} selected Task(s)...")
 
@@ -79,8 +78,7 @@ class TaskDialogPresenter:
             for index in indices:
                 self.model.edit_task(index, description, notes, date_due)
                 logging.info(f'Task "{description}" at index {index} edited')
-            if close_dialog is True:
-                self.close_dialog(True)
+            self.close_dialog(True)
         except Exception:
             self.handle_exception()
 

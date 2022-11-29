@@ -50,11 +50,6 @@ class Ui_TaskDialog(object):
         self.horizontalLayout.setStretch(1, 1)
         self.formLayout.setLayout(2, QtWidgets.QFormLayout.ItemRole.FieldRole, self.horizontalLayout)
         self.verticalLayout.addLayout(self.formLayout)
-        self.buttonBox = QtWidgets.QDialogButtonBox(TaskDialog)
-        self.buttonBox.setOrientation(QtCore.Qt.Orientation.Horizontal)
-        self.buttonBox.setStandardButtons(QtWidgets.QDialogButtonBox.StandardButton.Apply|QtWidgets.QDialogButtonBox.StandardButton.Cancel|QtWidgets.QDialogButtonBox.StandardButton.Ok)
-        self.buttonBox.setObjectName("buttonBox")
-        self.verticalLayout.addWidget(self.buttonBox)
 
         self.retranslateUi(TaskDialog)
         QtCore.QMetaObject.connectSlotsByName(TaskDialog)

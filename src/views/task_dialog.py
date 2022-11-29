@@ -21,12 +21,20 @@ class TaskDialog(QDialog, Ui_TaskDialog):
         super().__init__()
         self.setupUi(self)
 
+        self.buttonBox = QDialogButtonBox()
+        self.buttonBox.addButton("Cancel", QDialogButtonBox.ButtonRole.RejectRole)
         if edit_mode is True:
             self.setWindowIcon(QIcon("icons_24:pencil.png"))
             self.setWindowTitle("Edit selected Task(s)")
+            self.buttonBox.addButton("Edit", QDialogButtonBox.ButtonRole.AcceptRole)
         else:
             self.setWindowIcon(QIcon("icons_24:plus.png"))
             self.setWindowTitle("Create a new Task")
+            self.buttonBox.addButton("Create", QDialogButtonBox.ButtonRole.AcceptRole)
+            self.buttonBox.addButton(
+                "Create && New", QDialogButtonBox.ButtonRole.ApplyRole
+            )
+        self.verticalLayout.addWidget(self.buttonBox)
 
         self.dateTimeEditDueDate.setDateTime(QDateTime.currentDateTime())
         self.buttonBox.clicked.connect(self.handleButtonBoxClick)
